@@ -3,27 +3,33 @@ import pandas as pd
 
 def calculate_demographic_data(print_data=True):
     # Read data from file
-    df = None
+    df = pd.read_csv('adult.data.csv')
 
     # How many of each race are represented in this dataset? This should be a Pandas series with race names as the index labels.
-    race_count = None
+    race_count = df['race'].value_counts()
 
     # What is the average age of men?
-    average_age_men = None
+    average_age_men = df['age'].mean()
 
     # What is the percentage of people who have a Bachelor's degree?
-    percentage_bachelors = None
+    total_count = len(df['education'])
+    bachelors_count = (df['education'] == 'Bachelors').sum()
+    percentage_bachelors = (bachelors_count/total_count) * 100
 
     # What percentage of people with advanced education (`Bachelors`, `Masters`, or `Doctorate`) make more than 50K?
     # What percentage of people without advanced education make more than 50K?
 
-    # with and without `Bachelors`, `Masters`, or `Doctorate`
-    higher_education = None
-    lower_education = None
+    higher_education_total = df['education'].isin(['Bachelors', 'Masters', 'Doctorate']).sum()
+    higher_education_rich = ((df['education'].isin(['Bachelors', 'Masters', 'Doctorate'])) & (df['salary'] == '>50K')).sum()
+    higher_education_percentage = (higher_education_rich / higher_education_total) * 100
+
+    lower_education_total = (~df['education'].isin(['Bachelors', 'Masters', 'Doctorate'])).sum()
+    lower_education_rich = ((~df['education'].isin(['Bachelors', 'Masters', 'Doctorate'])) & (df['salary'] == '>50K')).sum()
+    lower_education_percentage = (lower_education_rich / lower_education_total) * 100
 
     # percentage with salary >50K
-    higher_education_rich = None
-    lower_education_rich = None
+    higher_education_rich = higher_education_percentage
+    lower_education_rich = lower_education_percentage
 
     # What is the minimum number of hours a person works per week (hours-per-week feature)?
     min_work_hours = None
